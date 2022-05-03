@@ -1,10 +1,20 @@
+/* Environment Setting: https://reactnative.dev/docs/environment-setup */
+/* Create React Native App (Incl. Expo SDK): https://reactnative.dev/blog/2017/03/13/introducing-create-react-native-app */
+/* Check Physical Device Connection: 'adb devices' in Shell */
+
 import React, { useState } from 'react';
 import { View, Text, Image } from 'react-native';
 
-import AppLoading from 'expo-app-loading'; /* Keep the Splash Screen until Preloading is Finished (Fonts, Images, etc.) */
+/* AppLoading: https://docs.expo.dev/versions/latest/sdk/app-loading */
+/* Keeps the Splash Screen until Preloading is Finished (Fonts, Images, etc.) */
+import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { Asset, useAssets } from 'expo-asset';
+
+/* React Navigation: https://reactnavigation.org/docs/getting-started */
+import { NavigationContainer } from '@react-navigation/native';
+import { Tabs } from './navigation/Tabs';
 
 /* [Step 1 ~ Step 3] Not Necessary for Step 4 */
 /* const loadFonts = (fonts) => fonts.map((font) => {
@@ -40,6 +50,7 @@ export default function App() {
   // };
 
   /* [Step 4]  Use 'useFont()' and 'useAsset()' for Preload */
+  /* Step 4 Only Preloads Assets → You Should Use Step 1 ~ Step 3 for Advanced Features (Initialize DB, Get User Profiles, Count Notifications, etc.) */
   const [assets] = useAssets([require('./assets/test.jpg')]); /* Cannot Use External Image URLs via Image.prefetch() */
   const [fonts] = Font.useFonts(Ionicons.font);
   
@@ -49,7 +60,9 @@ export default function App() {
     return <AppLoading />;
   }
   
-/* Step 4 Only Preloads Assets → You Should Use Step 1 ~ Step 3 for Advanced Features (Initialize DB, Get User Profiles, Count Notifications, etc.) */
-
-  return <Text>Hello!</Text>;
+  return (
+    <NavigationContainer>
+      <Tabs />
+    </NavigationContainer>
+  );
 }
