@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 /* Styled-components Example */
 /* Not Necessary to Import React Native Tags (View, Text, TouchableOpacity, etc.) */
@@ -19,7 +20,7 @@ const Title = styled.Text`
     };
 `;
 
-export const Movies = ({ navigation: { navigate }}) => (
+export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({ navigation: { navigate }}) => (
     /* How to Use 'navigate' Move Across Tabs ↔ Stacks */
     <Btn onPress={() => navigate("Stacks", { screen: "Screen1" })}>
         <Title>Movie</Title>
