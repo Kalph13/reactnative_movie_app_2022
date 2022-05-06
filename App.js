@@ -1,9 +1,11 @@
+import 'react-native-gesture-handler'; /* For the Drawer Navigator */
+
 /* Environment Setting: https://reactnative.dev/docs/environment-setup */
-/* Create React Native App (Incl. Expo SDK): https://reactnative.dev/blog/2017/03/13/introducing-create-react-native-app */
+/* Create React Native App (Incl. Expo SDK): https://github.com/expo/create-react-native-app */
 /* Check Physical Device Connection: 'adb devices' in Shell */
 
 import React, { useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, useColorScheme } from 'react-native';
 
 /* AppLoading: https://docs.expo.dev/versions/latest/sdk/app-loading */
 /* Keeps the Splash Screen until Preloading is Finished (Fonts, Images, etc.) */
@@ -13,8 +15,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Asset, useAssets } from 'expo-asset';
 
 /* React Navigation: https://reactnavigation.org/docs/getting-started */
-import { NavigationContainer } from '@react-navigation/native';
-import { Tabs } from './navigation/Tabs';
+import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
+import { Root } from './navigation/Root';
+import { ThemeProvider } from 'styled-components';
+import { darkTheme, lightTheme } from './styled';
 
 /* [Step 1 ~ Step 3] Not Necessary for Step 4 */
 /* const loadFonts = (fonts) => fonts.map((font) => {
@@ -53,6 +57,10 @@ export default function App() {
   /* Step 4 Only Preloads Assets → You Should Use Step 1 ~ Step 3 for Advanced Features (Initialize DB, Get User Profiles, Count Notifications, etc.) */
   const [assets] = useAssets([require('./assets/test.jpg')]); /* Cannot Use External Image URLs via Image.prefetch() */
   const [fonts] = Font.useFonts(Ionicons.font);
+
+  /* Light Mode ↔ Dark Mode w/DarkTheme and Default Theme */
+  const isDark = useColorScheme() === "dark";
+  // <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
   
   if (!assets || !fonts) {
     /* [Step 1 ~ Step 3] Not Necessary for Step 4, AllLoading Props are Also Deprecated */
@@ -61,8 +69,10 @@ export default function App() {
   }
   
   return (
-    <NavigationContainer>
-      <Tabs />
-    </NavigationContainer>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <NavigationContainer>
+        <Root />
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
