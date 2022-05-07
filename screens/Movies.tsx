@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions, RefreshControl } from 'react-native';
 import styled from 'styled-components/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import Slide from '../Components/Slide'
-import Poster from '../Components/Poster';
-import { makeImgPath } from '../utils';
+import Slide from '../Components/Slide';
+import HMedia from '../Components/HMedia';
+import VMedia from '../Components/VMedia';
 
 /* React Native Web Swiper: https://github.com/reactrondev/react-native-web-swiper */
 /* Support Web, But Worse Usability for iOS */
@@ -19,23 +19,21 @@ import Swiper from 'react-native-swiper';
 // import { View, Text, TouchableOpacity } from 'react-native';
 
 /* Styled-components Example */
-/* Not Necessary to Import React Native Tags (View, Text, TouchableOpacity, etc.) */
 /* const Btn = styled.TouchableOpacity`
-    flex: 1;
-    justify-content: center;
-    align-items: center;
     background-color: ${props => props.theme.mainBgColor} // How to Use 'Theme'
 `;
 
 const Title = styled.Text`
-    color: ${props => props.theme.textColor};
-    //color: ${props => (props.selected ? "red" : "blue")}; // How to Control Styles Using Styled-components & Props
+    color: ${props => (props.selected ? "red" : "blue")}; // How to Control Styles Using Styled-components & Props
+`;
+
+const Votes = styled(Title)` // How to Inherit Styles
+    font-size: 12px;
 `; */
 
 const API_KEY = "53003f8485665501746ef9cdb21e5b20";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const Loader = styled.View`
     flex: 1;
@@ -64,44 +62,8 @@ const ListScrollView = styled.ScrollView`
 
 `;
 
-const ListCard = styled.View`
-    margin-right: 10px;
-`;
-
-const Title = styled.Text`
-    font-size: 16px;
-    font-weight: bold;
-    color: ${props => props.theme.textColorDeemed};
-`;
-
-/* How to Inherit Styles */
-const Votes = styled(Title)`
-    font-size: 12px;
-    font-weight: normal;
-    margin-top: 0px;
-`;
-
-const HorizontalColumn = styled.View`
-    margin-left: 15px;
-`;
-
-const HorizontalCard = styled.View`
-    padding: 0px 25px;
-    margin-bottom: 10px;
-    flex-direction: row;
-    width: ${SCREEN_WIDTH - 100}px;
-`;
-
-const Overview = styled(Votes)`
-
-`;
-
-const Release = styled(Votes) `
-    margin-vertical: 5px;
-    font-weight: bold;
-`;
-
 export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
+    const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(true);
     const [nowPlaying, setNowPlaying] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
@@ -139,12 +101,20 @@ export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         getData();
     }, []);
     
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await getData();
+        setRefreshing(false);
+    };
+
     return loading ? (
         <Loader>
             <ActivityIndicator color="black" size="large" />
         </Loader>
     ) : (
-        <Container>
+        <Container
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
             <Swiper
                 horizontal
                 loop
@@ -173,33 +143,25 @@ export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                     contentContainerStyle={{ paddingLeft: 25 }}
                 >
                     {trending.map(movie => 
-                        <ListCard key={movie.id}>
-                            <Poster posterPath={movie.poster_path} />
-                            <Title>
-                                {movie.original_title.slice(0, 10)}
-                                {movie.original_title.length > 10 ? "..." : null}
-                            </Title>
-                            <Votes>{movie.vote_average > 0 ? `★${movie.vote_average}/10` : `Coming Soon`} </Votes>
-                        </ListCard>
+                        <VMedia 
+                            key={movie.id}
+                            posterPath={movie.poster_path}
+                            originalTitle={movie.original_title}
+                            voteAverage={movie.vote_average}
+                        />
                     )}
                 </ListScrollView>
             </ListContainer>
             <ListContainer>
                 <ListTitle>Coming Soon</ListTitle>
                 {upcoming.map(movie =>
-                    <HorizontalCard key={movie.id}>
-                        <Poster posterPath={movie.poster_path} />
-                        <HorizontalColumn>
-                            <Title>{movie.original_title}</Title>
-                            <Release>
-                                {new Date(movie.release_date).toLocaleDateString("ko")}
-                            </Release>
-                            <Overview>
-                                {movie.overview.slice(0, 140)}
-                                {movie.overview.length > 140 ? "..." : null}
-                            </Overview>
-                        </HorizontalColumn>
-                    </HorizontalCard>
+                    <HMedia
+                        key={movie.id}
+                        posterPath={movie.poster_path}
+                        originalTitle={movie.original_title}
+                        releaseDate={movie.release_date}
+                        overview={movie.overview}
+                    />
                 )}
             </ListContainer>
         </Container>
