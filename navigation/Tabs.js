@@ -17,23 +17,29 @@ export const Tabs = () => {
     /* Light Mode ↔ Dark Mode w/createBottomTabNavigator */
     const isDark = useColorScheme() === "dark";
     return (
-        <Tab.Navigator initialRouteName="Movies" screenOptions={{
-            tabBarStyle: {
-                backgroundColor: isDark ? BLACK : WHITE
-            },
-            tabBarActiveTintColor: isDark ? YELLOW : BLACK,
-            tabBarInactiveTintColor: isDark ? DARK_GREY : LIGHT_GREY,
-            tabBarLabelStyle: {
-                marginTop: -5,
-                fontSize: 12
-            },
-            headerStyle: {
-                backgroundColor: isDark ? BLACK : WHITE
-            },
-            headerTitleStyle: {
-                color: isDark ? WHITE : BLACK,
-            }
-        }}>
+        <Tab.Navigator
+            initialRouteName="Movies"
+            sceneContainerStyle={{
+                backgroundColor: isDark ? BLACK : WHITE /* Control Background Color of All Descendant Screens */
+            }}
+            screenOptions={{
+                tabBarStyle: {
+                    backgroundColor: isDark ? BLACK : WHITE
+                },
+                tabBarActiveTintColor: isDark ? YELLOW : BLACK,
+                tabBarInactiveTintColor: isDark ? DARK_GREY : LIGHT_GREY,
+                tabBarLabelStyle: {
+                    marginTop: -5,
+                    fontSize: 12
+                },
+                headerStyle: {
+                    backgroundColor: isDark ? BLACK : WHITE
+                },
+                headerTitleStyle: {
+                    color: isDark ? WHITE : BLACK,
+                }
+            }}
+        >
             <Tab.Screen name="Movies" component={Movies} options={{
                 tabBarIcon: ({color, size}) => <Ionicons name="film" size={size} color={color} />
             }}/>

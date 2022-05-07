@@ -13,25 +13,28 @@ const MaterialTopTabs = createMaterialTopTabNavigator();
 /* Bottom Tab Enabled Swipe */
 export const MaterialTops = () => {
     return (
-        <MaterialTopTabs.Navigator tabBarPosition="bottom" screenOptions={{
-            tabBarShowIcon: true,
-            tabBarIconStyle: {
-                height: 25,
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: -5,
-                marginBottom: -5
-            },
-            tabBarLabelStyle: {
-                fontSize: 10,
-                marginBottom: -5
-            },
-            /* Remove Bottom Border */
-            tabBarIndicatorStyle: {
-                width: 0, height: 0, /* for Android */
-                elevation: 0 /* for iOS */
-            }
-        }}>
+        <MaterialTopTabs.Navigator
+            tabBarPosition="bottom"
+            screenOptions={{
+                tabBarShowIcon: true,
+                tabBarIconStyle: {
+                    height: 25,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: -5,
+                    marginBottom: -5
+                },
+                tabBarLabelStyle: {
+                    fontSize: 10,
+                    marginBottom: -5
+                },
+                /* Remove Bottom Border */
+                tabBarIndicatorStyle: {
+                    width: 0, height: 0, /* for Android */
+                    elevation: 0 /* for iOS */
+                }
+            }}
+        >
             <MaterialTopTabs.Screen name="Movie" component={Movies} options={{
                 tabBarIcon: ({color, size}) => <Ionicons name="film" size={25} color={color} />
             }}/>

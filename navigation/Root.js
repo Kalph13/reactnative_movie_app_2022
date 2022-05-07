@@ -16,8 +16,10 @@ export const Root = () => {
         <RootStack.Navigator screenOptions={{
             headerShown: false
         }}>
-            <RootStack.Screen name="MaterialTops" component={MaterialTops} />
+            <RootStack.Screen name="Tabs" component={Tabs} />
             <RootStack.Screen name="Stacks" component={Stacks} />
         </RootStack.Navigator>
     );
 };
+
+// <RootStack.Screen name="MaterialTops" component={MaterialTops} />
