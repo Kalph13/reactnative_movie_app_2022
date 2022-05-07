@@ -17,5 +17,6 @@
       "metro.config.js",
       "jest.config.js"
     ],
-    "types": ["jest", "styled-components-react-native"]
+    "types": ["jest", "styled-components-react-native"],
+    "skipLibCheck": true
 }
