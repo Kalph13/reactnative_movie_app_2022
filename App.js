@@ -5,7 +5,8 @@ import 'react-native-gesture-handler'; /* For the Drawer Navigator */
 /* Check Physical Device Connection: 'adb devices' in Shell */
 
 import React, { useState } from 'react';
-import { View, Text, Image, useColorScheme } from 'react-native';
+import { View, Text, Image, useColorScheme, LogBox } from 'react-native';
+LogBox.ignoreLogs(["Setting a timer"]);
 
 /* AppLoading: https://docs.expo.dev/versions/latest/sdk/app-loading */
 /* Keeps the Splash Screen until Preloading is Finished (Fonts, Images, etc.) */
@@ -20,6 +21,9 @@ import { Root } from './navigation/Root';
 import { ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from './styled';
 
+/* React Query: https://react-query.tanstack.com */
+import { QueryClient, QueryClientProvider } from 'react-query'
+
 /* [Step 1 ~ Step 3] Not Necessary for Step 4 */
 /* const loadFonts = (fonts) => fonts.map((font) => {
   return Font.loadAsync(font);
@@ -29,6 +33,8 @@ const loadImages = (images) => images.map((image) => {
   if (typeof image === "string") return Image.prefetch(image);
   else return Asset.loadAsync(image);
 }); */
+
+const queryClient = new QueryClient();
 
 export default function App() {
   /* [Step 1 ~ Step 3] Not Necessary for Step 4 */
@@ -69,10 +75,12 @@ export default function App() {
   }
   
   return (
-    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-      <NavigationContainer>
-        <Root />
-      </NavigationContainer>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <NavigationContainer>
+          <Root />
+        </NavigationContainer>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

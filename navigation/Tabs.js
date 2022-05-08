@@ -23,6 +23,7 @@ export const Tabs = () => {
                 backgroundColor: isDark ? BLACK : WHITE /* Control Background Color of All Descendant Screens */
             }}
             screenOptions={{
+                unmountOnBlur: true, /* Kill the Current Screen When Leave (Unburden Memory) → React Query (Cache) is Required to Prevent Multiple Fetches */
                 tabBarStyle: {
                     backgroundColor: isDark ? BLACK : WHITE
                 },

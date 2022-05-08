@@ -15,6 +15,10 @@ import VMedia from '../Components/VMedia';
 /* Doesn't Support Web, But Better Usability for iOS */
 import Swiper from 'react-native-swiper';
 
+/* React Query: https://react-query.tanstack.com */
+import { useQuery } from 'react-query';
+import { moviesAPI } from '../api';
+
 /* Unnecessary When Using Styled Component */
 // import { View, Text, TouchableOpacity } from 'react-native';
 
@@ -66,12 +70,81 @@ const ListFlatView = styled.FlatList`
     margin-bottom: 25px;
 `;
 
-const ListSeparator = styled.View`
+const MovieKeyExtractor = item => item.id + "";
 
+const VSeparator = styled.View`
+    margin-right: 10px;
 `;
+
+const HSeparator = styled.View`
+    margin-bottom: 10px;
+`;
+
+const renderHeaderComponent = (nowPlayingDataResults, trendingDataResults) => (
+    <>
+        <Swiper
+            horizontal
+            loop
+            autoplay
+            timeout={2.5}
+            showsButtons={false}
+            showsPagination={false}
+            containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4, marginBottom: 25 }}
+        >
+            {nowPlayingDataResults.map(movie => 
+                <Slide
+                    key={movie.id}
+                    backdropPath={movie.backdrop_path}
+                    posterPath={movie.poster_path}
+                    originalTitle={movie.original_title}
+                    voteAverage={movie.vote_average}
+                    overview={movie.overview}
+                />
+            )}
+        </Swiper>
+        <ListTitle>Trending Movies</ListTitle>
+        <ListFlatView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 25 }}
+            keyExtractor={MovieKeyExtractor}
+            ItemSeparatorComponent={VSeparator}
+            data={trendingDataResults}
+            renderItem={renderVMedia}
+        />
+        <ListTitle>Coming Soon</ListTitle>
+    </>
+);
+
+const renderVMedia = ({ item }) => (
+    <VMedia 
+        posterPath={item.poster_path}
+        originalTitle={item.original_title}
+        voteAverage={item.vote_average}
+    />
+);
+
+const renderHMedia = ({ item }) => (
+    <HMedia
+        key={item.id}
+        posterPath={item.poster_path}
+        originalTitle={item.original_title}
+        releaseDate={item.release_date}
+        overview={item.overview}
+    />
+);
 
 export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     const [refreshing, setRefreshing] = useState(false);
+    const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery("nowPlaying" /* Key for Cache */, moviesAPI.getNowPlaying);
+    const { isLoading: upcomingLoading, data: upcomingData } = useQuery("upcoming", moviesAPI.getUpcoming);
+    const { isLoading: trendingLoading, data: trendingData } = useQuery("trending", moviesAPI.getTrending);
+
+    const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
+    
+    const onRefresh = async () => {};
+    
+    /* Replaced by React Query
     const [loading, setLoading] = useState(true);
     const [nowPlaying, setNowPlaying] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
@@ -95,13 +168,12 @@ export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         setTrending(results);
     };
 
-    /* Wait Until Fetching All APIs */
-    const getData = async() => {
+    const getData = async() => { 
         await Promise.all([
             getNowPlaying(),
             getUpcoming(),
             getTrending()
-        ]);
+        ]); // Wait Until Fetching All APIs
         setLoading(false);
     };
 
@@ -113,7 +185,7 @@ export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         setRefreshing(true);
         await getData();
         setRefreshing(false);
-    };
+    };  */
 
     return loading ? (
         <Loader>
@@ -123,61 +195,13 @@ export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         <ListFlatView 
             refreshing={refreshing}
             onRefresh={onRefresh} 
-            ListHeaderComponent={
-                <>
-                    <Swiper
-                        horizontal
-                        loop
-                        autoplay
-                        timeout={2.5}
-                        showsButtons={false}
-                        showsPagination={false}
-                        containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4, marginBottom: 25 }}
-                    >
-                        {nowPlaying.map(movie => 
-                            <Slide
-                                key={movie.id}
-                                backdropPath={movie.backdrop_path}
-                                posterPath={movie.poster_path}
-                                originalTitle={movie.original_title}
-                                voteAverage={movie.vote_average}
-                                overview={movie.overview}
-                            />
-                        )}
-                    </Swiper>
-                    <ListTitle>Trending Movies</ListTitle>
-                    <ListFlatView 
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ paddingHorizontal: 25 }}
-                        keyExtractor={item => item.id + ""}
-                        ItemSeparatorComponent={() => <ListSeparator style={{ marginRight: 10 }} />}
-                        data={trending}
-                        renderItem={({ item }) => (
-                            <VMedia 
-                                posterPath={item.poster_path}
-                                originalTitle={item.original_title}
-                                voteAverage={item.vote_average}
-                            />
-                        )}
-                    />
-                    <ListTitle>Coming Soon</ListTitle>
-                </>
-            }
-            keyExtractor={item => item.id + ""}
-            ItemSeparatorComponent={() => <ListSeparator style={{ marginBottom: 10 }} />}
-            data={upcoming}
-            renderItem={({ item }) =>
-                <HMedia
-                    key={item.id}
-                    posterPath={item.poster_path}
-                    originalTitle={item.original_title}
-                    releaseDate={item.release_date}
-                    overview={item.overview}
-                />
-            }
+            ListHeaderComponent={renderHeaderComponent(nowPlayingData.results, trendingData.results)}
+            keyExtractor={MovieKeyExtractor}
+            ItemSeparatorComponent={HSeparator}
+            data={upcomingData.results}
+            renderItem={renderHMedia}
         />
-        
+
         /* Replaced by FlatList (Lazy Render, No Map(), Inherits ScrollView)
         <Container
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
