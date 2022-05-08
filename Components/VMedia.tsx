@@ -5,7 +5,7 @@ import Poster from "./Poster";
 import Votes from "./Votes";
 
 const VMovie = styled.View`
-    margin-right: 10px;
+
 `;
 
 const Title = styled.Text`

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Dimensions, RefreshControl } from 'react-native';
+import { ActivityIndicator, Dimensions, RefreshControl, FlatList } from 'react-native';
 import styled from 'styled-components/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -62,6 +62,14 @@ const ListScrollView = styled.ScrollView`
 
 `;
 
+const ListFlatView = styled.FlatList`
+    margin-bottom: 25px;
+`;
+
+const ListSeparator = styled.View`
+
+`;
+
 export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -112,6 +120,65 @@ export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
             <ActivityIndicator color="black" size="large" />
         </Loader>
     ) : (
+        <ListFlatView 
+            refreshing={refreshing}
+            onRefresh={onRefresh} 
+            ListHeaderComponent={
+                <>
+                    <Swiper
+                        horizontal
+                        loop
+                        autoplay
+                        timeout={2.5}
+                        showsButtons={false}
+                        showsPagination={false}
+                        containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4, marginBottom: 25 }}
+                    >
+                        {nowPlaying.map(movie => 
+                            <Slide
+                                key={movie.id}
+                                backdropPath={movie.backdrop_path}
+                                posterPath={movie.poster_path}
+                                originalTitle={movie.original_title}
+                                voteAverage={movie.vote_average}
+                                overview={movie.overview}
+                            />
+                        )}
+                    </Swiper>
+                    <ListTitle>Trending Movies</ListTitle>
+                    <ListFlatView 
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ paddingHorizontal: 25 }}
+                        keyExtractor={item => item.id + ""}
+                        ItemSeparatorComponent={() => <ListSeparator style={{ marginRight: 10 }} />}
+                        data={trending}
+                        renderItem={({ item }) => (
+                            <VMedia 
+                                posterPath={item.poster_path}
+                                originalTitle={item.original_title}
+                                voteAverage={item.vote_average}
+                            />
+                        )}
+                    />
+                    <ListTitle>Coming Soon</ListTitle>
+                </>
+            }
+            keyExtractor={item => item.id + ""}
+            ItemSeparatorComponent={() => <ListSeparator style={{ marginBottom: 10 }} />}
+            data={upcoming}
+            renderItem={({ item }) =>
+                <HMedia
+                    key={item.id}
+                    posterPath={item.poster_path}
+                    originalTitle={item.original_title}
+                    releaseDate={item.release_date}
+                    overview={item.overview}
+                />
+            }
+        />
+        
+        /* Replaced by FlatList (Lazy Render, No Map(), Inherits ScrollView)
         <Container
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
@@ -164,7 +231,7 @@ export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                     />
                 )}
             </ListContainer>
-        </Container>
+        </Container> */
     );
 }
 

@@ -9,7 +9,6 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const HMovie = styled.View`
     padding: 0px 25px;
-    margin-bottom: 10px;
     flex-direction: row;
     width: ${SCREEN_WIDTH - 100}px;
 `;
@@ -54,7 +53,7 @@ const HMedia: React.FC<HMediaProps> = ({ posterPath, originalTitle, releaseDate,
                 </Title>
                 {releaseDate ? 
                     <Release>
-                        {new Date(releaseDate).toLocaleDateString("en"/*, {month: "long", day: "numeric", year: "numeric"}*/)}
+                        {new Date(releaseDate).toLocaleDateString("en")}
                     </Release> : null
                 }
                 {voteAverage ?

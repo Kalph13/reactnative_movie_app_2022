@@ -30,6 +30,7 @@ export const Tabs = () => {
                 tabBarInactiveTintColor: isDark ? DARK_GREY : LIGHT_GREY,
                 tabBarLabelStyle: {
                     marginTop: -5,
+                    marginBottom: 5,
                     fontSize: 12
                 },
                 headerStyle: {
