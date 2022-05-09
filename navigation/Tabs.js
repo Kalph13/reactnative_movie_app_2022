@@ -24,8 +24,9 @@ export const Tabs = () => {
             }}
             screenOptions={{
                 unmountOnBlur: true, /* Kill the Current Screen When Leave (Unburden Memory) → React Query (Cache) is Required to Prevent Multiple Fetches */
+                tabBarHideOnKeyboard: true, /* Hide the Bottom Tabs When Keyboard is On */
                 tabBarStyle: {
-                    backgroundColor: isDark ? BLACK : WHITE
+                    backgroundColor: isDark ? BLACK : WHITE,
                 },
                 tabBarActiveTintColor: isDark ? YELLOW : BLACK,
                 tabBarInactiveTintColor: isDark ? DARK_GREY : LIGHT_GREY,
@@ -45,10 +46,10 @@ export const Tabs = () => {
             <Tab.Screen name="Movies" component={Movies} options={{
                 tabBarIcon: ({color, size}) => <Ionicons name="film" size={size} color={color} />
             }}/>
-            <Tab.Screen name="TV" component={Search} options={{
+            <Tab.Screen name="TV" component={Tv} options={{
                 tabBarIcon: ({color, size}) => <Ionicons name="tv" size={size} color={color} />
             }}/>
-            <Tab.Screen name="Search" component={Tv} options={{
+            <Tab.Screen name="Search" component={Search} options={{
                 tabBarIcon: ({focused, color, size}) => <Ionicons name={focused ? "search" : "search-outline"} size={size} color={color} />
             }}/>
         </Tab.Navigator>

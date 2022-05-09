@@ -13,9 +13,7 @@ const RootStack = createNativeStackNavigator();
 /* Combine Tabs and Stacks: Bottom Tabs Will be Hidden When Stack Screens Show Up (Common UI) */
 export const Root = () => {
     return (
-        <RootStack.Navigator screenOptions={{
-            headerShown: false
-        }}>
+        <RootStack.Navigator screenOptions={{ headerShown: false }}>
             <RootStack.Screen name="Tabs" component={Tabs} />
             <RootStack.Screen name="Stacks" component={Stacks} />
         </RootStack.Navigator>

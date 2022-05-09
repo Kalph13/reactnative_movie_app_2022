@@ -7,5 +7,6 @@ declare module 'styled-components' {
     mainBgColor: string;
     textColor: string;
     textColorDeemed: string;
+    searchBarColor: string;
   }
 }
