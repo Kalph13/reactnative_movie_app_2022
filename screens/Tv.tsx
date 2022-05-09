@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import { RefreshControl } from 'react-native';
 
 import Loader from '../Components/Loader';
-import { HList } from '../Components/HList';
+import HList from '../Components/HList';
 
 import { tvAPI } from '../api';
 import { useQuery, useQueryClient } from 'react-query';

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { StyleSheet, useColorScheme } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
 
 import Poster from './Poster';
 import { makeImgPath } from '../utils';
@@ -8,7 +9,7 @@ import { makeImgPath } from '../utils';
 /* Blur View: https://docs.expo.dev/versions/latest/sdk/blur-view */
 import { BlurView } from 'expo-blur';
 
-const View = styled.View`
+const View = styled.TouchableOpacity`
     flex: 1;
 `;
 
@@ -58,9 +59,12 @@ interface SlideProps {
 
 const Slide: React.FC<SlideProps> = ({ backdropPath, posterPath, originalTitle, voteAverage, overview }) => {
     const isDark = useColorScheme() === "dark";
-
+    const navigation = useNavigation();
+    const moveToDetail = () => {
+        navigation.navigate("Stacks", { screen: "Detail" });
+    };
     return (
-        <View>
+        <View onPress={moveToDetail}>
             <BackgroundImage source={{uri: makeImgPath(backdropPath)}}/>
             <BlurView
                 intensity={100}

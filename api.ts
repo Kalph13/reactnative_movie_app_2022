@@ -31,29 +31,33 @@ export interface MovieResponse extends BaseResponse {
 export const moviesAPI = {
     getNowPlaying: () => 
         fetch(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`)
-            .then(res => res.json()
-        ),
+            .then(res => res.json()),
     getUpcoming: () => 
         fetch(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`)
-            .then(res => res.json()
-        ),
+            .then(res => res.json()),
     getTrending: () => 
         fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}`)
-            .then(res => res.json()
-        ),
+            .then(res => res.json()),
+    search: ({ queryKey }) => {
+        const [_, query] = queryKey; /* How to Receive Parameters */
+        return fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&page=1&query=${query}`)
+            .then(res => res.json());
+    }
 };
 
 export const tvAPI = {
     trending: () =>
         fetch(`${BASE_URL}/trending/tv/week?api_key=${API_KEY}`)
-            .then(res => res.json()
-        ),
+            .then(res => res.json()),
     airingToday: () =>
         fetch(`${BASE_URL}/tv/airing_today?api_key=${API_KEY}`)
-            .then(res => res.json()
-        ),
+            .then(res => res.json()),
     topRated: () =>
         fetch(`${BASE_URL}/tv/top_rated?api_key=${API_KEY}`)
-            .then(res => res.json()
-        ),
+            .then(res => res.json()),
+    search: ({ queryKey }) => {
+        const [_, query] = queryKey; /* How to Receive Parameters */
+        return fetch(`${BASE_URL}/search/tv?api_key=${API_KEY}&language=en-US&page=1&query=${query}`)
+            .then(res => res.json());
+    }
 };

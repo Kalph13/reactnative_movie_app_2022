@@ -35,7 +35,7 @@ interface HListProps {
     item: any[];
 }
 
-export const HList: React.FC<HListProps> = ({ title, data }) => (
+const HList: React.FC<HListProps> = ({ title, data }) => (
     <>
         <ListTitle>{title}</ListTitle>
         <ListFlatView
@@ -49,3 +49,5 @@ export const HList: React.FC<HListProps> = ({ title, data }) => (
         />
     </>
 );
+
+export default HList;

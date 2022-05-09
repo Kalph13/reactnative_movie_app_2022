@@ -1,13 +1,14 @@
 import React from "react";
 import { Dimensions } from 'react-native';
 import styled from "styled-components/native";
+import { useNavigation } from "@react-navigation/native";
 
 import Poster from "./Poster";
 import Votes from "./Votes";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-const HMovie = styled.View`
+const HMovie = styled.TouchableOpacity`
     padding: 0px 25px;
     flex-direction: row;
     width: ${SCREEN_WIDTH - 100}px;
@@ -43,8 +44,12 @@ interface HMediaProps {
   }
 
 const HMedia: React.FC<HMediaProps> = ({ posterPath, originalTitle, releaseDate, overview, voteAverage }) => {
+    const navigation = useNavigation();
+    const moveToDetail = () => {
+        navigation.navigate("Stacks", { screen: "Detail" });
+    };
     return (
-        <HMovie>
+        <HMovie onPress={moveToDetail}>
             <Poster posterPath={posterPath} />
             <HColumn>
                 <Title>

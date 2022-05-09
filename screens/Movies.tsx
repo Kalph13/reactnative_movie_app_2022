@@ -3,12 +3,6 @@ import { Dimensions, RefreshControl, FlatList } from 'react-native';
 import styled from 'styled-components/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import Loader from '../Components/Loader';
-import Slide from '../Components/Slide';
-import HMedia from '../Components/HMedia';
-import VMedia from '../Components/VMedia';
-import { HList } from '../Components/HList';
-
 /* React Native Web Swiper: https://github.com/reactrondev/react-native-web-swiper */
 /* Support Web, But Worse Usability for iOS */
 // import Swiper from 'react-native-web-swiper';
@@ -16,6 +10,13 @@ import { HList } from '../Components/HList';
 /* React Native Swiper: https://github.com/leecade/react-native-swiper */
 /* Doesn't Support Web, But Better Usability for iOS */
 import Swiper from 'react-native-swiper';
+
+import Loader from '../Components/Loader';
+import Slider from '../Components/Slider';
+import Slide from '../Components/Slide';
+import HMedia from '../Components/HMedia';
+import VMedia from '../Components/VMedia';
+import HList from '../Components/HList';
 
 /* React Query: https://react-query.tanstack.com */
 import { useQueryClient, useQuery } from 'react-query';
@@ -74,26 +75,7 @@ const HSeparator = styled.View`
 
 const renderHeaderComponent = (nowPlayingDataResults, trendingDataResults) => (
     <>
-        <Swiper
-            horizontal
-            loop
-            autoplay
-            timeout={2.5}
-            showsButtons={false}
-            showsPagination={false}
-            containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4, marginBottom: 25 }}
-        >
-            {nowPlayingDataResults.map((movie: Movie) => 
-                <Slide
-                    key={movie.id}
-                    backdropPath={movie.backdrop_path || ""}
-                    posterPath={movie.poster_path || ""}
-                    originalTitle={movie.original_title}
-                    voteAverage={movie.vote_average}
-                    overview={movie.overview}
-                />
-            )}
-        </Swiper>
+        <Slider data={nowPlayingDataResults} />
         <HList title="Trending Movies" data={trendingDataResults} />
         <ListTitle>Coming Soon</ListTitle>
     </>
