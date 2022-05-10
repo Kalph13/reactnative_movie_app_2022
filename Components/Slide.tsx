@@ -8,6 +8,7 @@ import { makeImgPath } from '../utils';
 
 /* Blur View: https://docs.expo.dev/versions/latest/sdk/blur-view */
 import { BlurView } from 'expo-blur';
+import { Movie } from '../api';
 
 const View = styled.TouchableOpacity`
     flex: 1;
@@ -55,13 +56,19 @@ interface SlideProps {
     originalTitle: string;
     voteAverage: number;
     overview: string;
+    fullData: Movie;
 };
 
-const Slide: React.FC<SlideProps> = ({ backdropPath, posterPath, originalTitle, voteAverage, overview }) => {
+const Slide: React.FC<SlideProps> = ({ backdropPath, posterPath, originalTitle, voteAverage, overview, fullData }) => {
     const isDark = useColorScheme() === "dark";
     const navigation = useNavigation();
     const moveToDetail = () => {
-        navigation.navigate("Stacks", { screen: "Detail" });
+        navigation.navigate("Stacks", {
+            screen: "Detail",
+            params: {
+                ...fullData
+            }
+        });
     };
     return (
         <View onPress={moveToDetail}>

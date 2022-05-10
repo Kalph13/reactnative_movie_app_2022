@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import Poster from "./Poster";
 import Votes from "./Votes";
+import { Movie } from "../api";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -41,12 +42,18 @@ interface HMediaProps {
     overview: string;
     releaseDate?: string;
     voteAverage?: number;
+    fullData: Movie;
   }
 
-const HMedia: React.FC<HMediaProps> = ({ posterPath, originalTitle, releaseDate, overview, voteAverage }) => {
+const HMedia: React.FC<HMediaProps> = ({ posterPath, originalTitle, releaseDate, overview, voteAverage, fullData }) => {
     const navigation = useNavigation();
     const moveToDetail = () => {
-        navigation.navigate("Stacks", { screen: "Detail" });
+        navigation.navigate("Stacks", { 
+            screen: "Detail",
+            params: {
+                ...fullData
+            }
+        });
     };
     return (
         <HMovie onPress={moveToDetail}>

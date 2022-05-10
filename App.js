@@ -5,7 +5,7 @@ import 'react-native-gesture-handler'; /* For the Drawer Navigator */
 /* Check Physical Device Connection: 'adb devices' in Shell */
 
 import React, { useState } from 'react';
-import { View, Text, Image, useColorScheme, LogBox } from 'react-native';
+import { View, Text, Image, useColorScheme, LogBox, StatusBar } from 'react-native';
 LogBox.ignoreLogs(["Setting a timer"]);
 
 /* AppLoading: https://docs.expo.dev/versions/latest/sdk/app-loading */
@@ -77,6 +77,10 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <StatusBar 
+            backgroundColor={isDark ? "black" : "white"}
+            barStyle={isDark ? "light-content" : "dark-content"}
+        />
         <NavigationContainer>
           <Root />
         </NavigationContainer>

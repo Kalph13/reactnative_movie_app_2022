@@ -88,6 +88,7 @@ const renderHMedia = ({ item }) => (
         originalTitle={item.original_title}
         releaseDate={item.release_date}
         overview={item.overview}
+        fullData={item}
     />
 );
 
