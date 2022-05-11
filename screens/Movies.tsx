@@ -19,7 +19,7 @@ import VMedia from '../Components/VMedia';
 import HList from '../Components/HList';
 
 /* React Query: https://react-query.tanstack.com */
-import { useQueryClient, useQuery } from 'react-query';
+import { useQueryClient, useQuery, useInfiniteQuery } from 'react-query';
 import { Movie, MovieResponse, moviesAPI } from '../api';
 
 /* Unnecessary When Using Styled Component */
@@ -68,7 +68,6 @@ const ListFlatView = styled.FlatList`
 
 const KeyExtractor = item => item.id + "";
 
-
 const HSeparator = styled.View`
     margin-bottom: 10px;
 `;
@@ -79,6 +78,10 @@ const renderHeaderComponent = (nowPlayingDataResults, trendingDataResults) => (
         <HList title="Trending Movies" data={trendingDataResults} />
         <ListTitle>Coming Soon</ListTitle>
     </>
+);
+
+const renderFooterComponent = (upcomingIsFetchingNextPage) => (
+    upcomingIsFetchingNextPage ? <Loader /> : null
 );
 
 const renderHMedia = ({ item }) => (
@@ -107,9 +110,14 @@ export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     const { 
         isLoading: upcomingLoading,
         data: upcomingData,
+        hasNextPage: upcomingHasNextPage,
+        fetchNextPage: upcomingFetchNextPage,
+        isFetchingNextPage: upcomingIsFetchingNextPage,
         // refetch: upcomingRefetch,
         // isRefetching: upcomingIsRefetching
-    } = useQuery<MovieResponse>(["movies", "upcoming"], moviesAPI.getUpcoming);
+    } = useInfiniteQuery<MovieResponse>(["movies", "upcoming"], moviesAPI.getUpcoming, {
+        getNextPageParam: (lastPage) => lastPage.page + 1 > lastPage.total_pages ? null : lastPage.page + 1
+    });
 
     const { 
         isLoading: trendingLoading,
@@ -131,6 +139,10 @@ export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         // nowPlayingRefetch();
         // upcomingRefetch();
         // trendingRefetch;
+    };
+    
+    const loadMore = () => {
+        upcomingHasNextPage ? upcomingFetchNextPage() : null;
     };
     
     /* Replaced by React Query
@@ -182,13 +194,18 @@ export const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     ) : (
         <ListFlatView 
             refreshing={refreshing}
-            onRefresh={onRefresh} 
+            onRefresh={onRefresh}
+            onEndReached={loadMore}
+            onEndReachedThreshold={2} /* Where to Execute loadMore() */
             ListHeaderComponent={renderHeaderComponent(nowPlayingData?.results, trendingData?.results)}
+            ListFooterComponent={renderFooterComponent(upcomingIsFetchingNextPage)}
             keyExtractor={KeyExtractor}
             ItemSeparatorComponent={HSeparator}
-            data={upcomingData?.results}
+            // data={upcomingData?.results} /* Replaced by useInfiniteQuery() */
+            data={upcomingData?.pages.map(page => page.results).flat()} /* flat(): [[A], [B], [C]] → [A, B, C] */
             renderItem={renderHMedia}
         />
+        
 
         /* Replaced by FlatList (Lazy Render, No Map(), Inherits ScrollView)
         <Container

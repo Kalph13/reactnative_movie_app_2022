@@ -1,5 +1,6 @@
 import React from "react"
 import { Dimensions } from "react-native"
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 /* React Native Web Swiper: https://github.com/reactrondev/react-native-web-swiper */
 /* Support Web, But Worse Usability for iOS */
@@ -13,7 +14,7 @@ import Slide from '../Components/Slide';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-const Slider = ({ data }) => {
+const Slider: React.FC<NativeStackScreenProps<any, "Movies">> = ({ data }) => {
     return (
         <Swiper
             horizontal
@@ -24,7 +25,7 @@ const Slider = ({ data }) => {
             showsPagination={false}
             containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4, marginBottom: 25 }}
         >
-            {data.map((movie: Movie) => 
+            {data.map((movie) => 
                 <Slide
                     key={movie.id}
                     backdropPath={movie.backdrop_path || ""}

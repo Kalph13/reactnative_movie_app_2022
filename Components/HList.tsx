@@ -1,7 +1,14 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
+import { Movie, TV } from "../api";
 import VMedia from '../Components/VMedia';
+
+interface HListProps {
+    title: string;
+    data: Movie[] | TV[];
+    item: any[];
+}
 
 const ListTitle = styled.Text`
     color: ${props => props.theme.textColor};
@@ -29,12 +36,6 @@ const renderVMedia = ({ item }) => (
         fullData={item}
     />
 );
-
-interface HListProps {
-    title: string;
-    data: any[];
-    item: any[];
-}
 
 const HList: React.FC<HListProps> = ({ title, data }) => (
     <>

@@ -11,7 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Poster from "../Components/Poster";
 import Loader from "../Components/Loader";
 import { makeImgPath } from "../utils";
-import { moviesAPI, tvAPI } from "../api";
+import { Movie, TV, MovieDetails, TVDetails, moviesAPI, tvAPI } from "../api";
 import { BLACK, DARK_GREY, LIGHT_GREY, YELLOW, WHITE } from "../colors";
 import { Ionicons } from "@expo/vector-icons"
 
@@ -69,7 +69,7 @@ const ButtonText = styled.Text`
 `;
 
 type RootStackParamList = {
-    Detail: { fullData: any[] };
+    Detail: Movie | TV;
 }
 
 type DetailScreenProps = NativeStackScreenProps<RootStackParamList, "Detail">
@@ -79,7 +79,7 @@ const Detail: React.FC<DetailScreenProps> = ({ navigation: { setOptions }, route
     const isMovie = params.original_title ? true : false;
     const isAndroid = Platform.OS === "android";
 
-    const { isLoading, data } = useQuery([isMovie ? "movies" : "tv", params.id], isMovie ? moviesAPI.detail : tvAPI.detail);
+    const { isLoading, data } = useQuery<MovieDetails | TVDetails>([isMovie ? "movies" : "tv", params.id], isMovie ? moviesAPI.detail : tvAPI.detail);
 
     /* Share: https://reactnative.dev/docs/share */
     const shareMedia = async () => {

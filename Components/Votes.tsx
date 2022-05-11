@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components/native";
 
 interface VotesProps {
-    votes: number;
+    voteAverage: number;
 }
 
 const Text = styled.Text`
